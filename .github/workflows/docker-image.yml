@@ -25,7 +25,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
     
       - name: Deploy
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v3
         with:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             host: ${{ secrets.HOST }}
