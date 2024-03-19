@@ -33,8 +33,4 @@ jobs:
             port: ${{ secrets.PORT }}
             # 도커 작업
             script: |
-              docker pull ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
-              docker stop $(docker ps -a -q)
-              # docker run -d -p 8000:3000 yj80669/aws-docker-gitaction-test:latest
-              docker rm $(docker ps --filter 'status=exited' -a -q)
-              docker image prune -a -f
+              whoami
