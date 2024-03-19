@@ -30,7 +30,6 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USER }}
-            port: ${{ secrets.PORT }}
             # 도커 작업
             script: |
               whoami
