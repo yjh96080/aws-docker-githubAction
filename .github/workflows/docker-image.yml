@@ -25,11 +25,11 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
     
       - name: Deploy
-        uses: appleboy/ssh-action@v3
+        uses: appleboy/ssh-action@master
         with:
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USER }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
             port: ${{ secrets.PORT }}
             # 도커 작업
             script: |
