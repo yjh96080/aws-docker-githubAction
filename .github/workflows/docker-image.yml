@@ -27,9 +27,10 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-            host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
-            username: ec2-user
-            key: ${{ secrets.SSH_PRIVATE_KEY }} # pem 키
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USER }}
+            port: ${{ secrets.PORT }}
             # 도커 작업
             script: |
               docker pull ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
