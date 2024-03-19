@@ -1,4 +1,4 @@
-FROM node:21.7.1
+FROM node:16.17.0
 
 WORKDIR /svcroot/webapps/test-node
 
