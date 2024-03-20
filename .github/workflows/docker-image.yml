@@ -1,24 +1,38 @@
-name: deploy
+name: Java CI with Gradle
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches:
-      - main
+    branches: [ "main" , "dev" ]
+  pull_request:
+    branches: [ "main" , "dev" ]
 
+permissions:
+  contents: read
 
 jobs:
-  SSH:
-    runs-on: ubuntu-latest
+  build:
 
+    runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: ssh to ec2
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # 내가 변수로 저장한 pem key
-          host: ${{ secrets.HOST }} # 내가 변수로 저장한 ip
-          username: ubuntu
-          script: |  
-            echo "hihi"
+    - uses: actions/checkout@v3
+    - name: Docker build
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t app .
+        docker tag app ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
+
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }} # pem 키
+        # 도커 작업
+        script: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
+          docker stop $(docker ps -a -q)
+          docker run -d --log-driver=syslog -p 8080:3080 ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
+          docker rm $(docker ps --filter 'status=exited' -a -q)
+          docker image prune -a -f
