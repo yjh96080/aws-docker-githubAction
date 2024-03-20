@@ -33,6 +33,6 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:3080 ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
+          docker run -d --log-driver=syslog -p 8000:3000 ${{ secrets.DOCKER_USERNAME }}/aws-docker-gitaction-test:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
